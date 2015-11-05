@@ -1,3 +1,4 @@
+import binascii
 import calendar
 import re
 from decimal import Decimal
@@ -5,7 +6,7 @@ import sys
 import struct
 from rdbtools.parser import RdbCallback, RdbParser
 
-ESCAPE = re.compile(ur'[\x00-\x1f\\"\b\f\n\r\t\u2028\u2029]')
+ESCAPE = re.compile(r'[\x00-\x1f\\"\b\f\n\r\t\u2028\u2029]')
 ESCAPE_ASCII = re.compile(r'([\\"]|[^\ -~])')
 HAS_UTF8 = re.compile(r'[\x80-\xff]')
 ESCAPE_DCT = {
@@ -23,7 +24,7 @@ for i in range(0x20):
     ESCAPE_DCT.setdefault(chr(i), '\\u%04x' % (i,))
 
 def _floatconstants():
-    _BYTES = '7FF80000000000007FF0000000000000'.decode('hex')
+    _BYTES = binascii.hexlify(b'7FF80000000000007FF0000000000000')
     # The struct module in Python 2.4 would get frexp() out of range here
     # when an endian is specified in the format string. Fixed in Python 2.5+
     if sys.byteorder != 'big':
